@@ -1,0 +1,55 @@
+{% extends "buyer_portal_base.html" %}
+{% block title %}Buyer Messages | Krushi Settu{% endblock %}
+{% block page_content %}
+<section class="portal-panel">
+    <div class="portal-panel-head">
+        <div><span class="portal-kicker">Messages</span><h2>Talk to farmers directly</h2></div>
+    </div>
+    <div class="portal-chat-layout">
+        <div class="portal-contact-list">
+            {% for farmer in farmer_profiles %}
+                <article class="portal-contact-card {% if selected_farmer and selected_farmer.id == farmer.id %}is-active{% elif not selected_farmer and forloop.first %}is-active{% endif %}" data-chat-contact data-chat-name="{{ farmer.full_name }}" data-chat-status="{{ farmer.location_name }}" data-chat-message="Ask about price, freshness, quantity, and delivery." data-chat-farmer-id="{{ farmer.id }}">
+                    <div class="portal-row">
+                        <div>
+                            <h4>{{ farmer.full_name }}</h4>
+                            <p>{{ farmer.location_name }}</p>
+                        </div>
+                        <span class="portal-status available">Farmer</span>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        <div class="portal-chat-window">
+            <div class="portal-chat-head">
+                <div>
+                    <strong data-chat-active-name>{% if selected_farmer %}{{ selected_farmer.full_name }}{% else %}Select a farmer{% endif %}</strong><br>
+                    <span class="portal-subtle" data-chat-active-status>{% if selected_farmer %}{{ selected_farmer.location_name }}{% else %}Choose a farmer to start chatting{% endif %}</span>
+                </div>
+                {% if selected_farmer %}
+                    <a class="portal-button-soft" href="https://www.google.com/maps?q={{ selected_farmer.latitude }},{{ selected_farmer.longitude }}" target="_blank" rel="noopener">View Map</a>
+                {% endif %}
+            </div>
+            <div class="portal-chat-thread">
+                {% if buyer_chats %}
+                    {% for chat in buyer_chats %}
+                        {% if not selected_farmer or chat.farmer.id == selected_farmer.id %}
+                            <div class="portal-chat-bubble {% if not chat.is_unread %}outgoing{% endif %}">
+                                <p>{{ chat.message }}</p>
+                                <small>{{ chat.created_at|date:"h:i A" }}</small>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="portal-chat-bubble"><p data-chat-active-message>Start by asking a farmer about price, quality, or location.</p><small>Now</small></div>
+                {% endif %}
+            </div>
+            <form method="post" action="{% url 'send_buyer_message' %}" class="portal-chat-input">
+                {% csrf_token %}
+                {{ chat_form.farmer_id }}
+                {{ chat_form.message }}
+                <button class="portal-button-soft" type="submit"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

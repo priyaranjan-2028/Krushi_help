@@ -1,0 +1,277 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krushi Settu - Smart Farmer Marketplace</title>
+    <meta name="description"
+        content="Direct Market Access for Farmers. Connect directly with buyers and eliminate middlemen with Krushi Settu.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <span class="icon">🌾</span> Krushi <span class="highlight">Settu</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#market">Market</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn btn-outline login-btn"><span class="icon">🔐</span> Aadhaar Login</button>
+            </div>
+            <!-- Mobile Menu Toggle -->
+            <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <img src="assets/images/hero_farmer_app_1774689616135.png"
+                alt="Happy Indian farmer using mobile phone in green field">
+            <div class="overlay"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <div class="badge fade-up">Direct Market Access</div>
+                <h1 class="fade-up delay-1">Fair Prices for <span class="highlight-text">Farmers</span>.<br>Fresh
+                    Produce for <span class="highlight-text">Buyers</span>.</h1>
+                <p class="fade-up delay-2">Krushi Settu is a smart marketplace that connects farmers directly with
+                    buyers. Stop losing money to middlemen and start growing your profits today.</p>
+                <div class="hero-buttons fade-up delay-3">
+                    <button class="btn btn-primary btn-large">🧑‍🌾 I am a Farmer</button>
+                    <button class="btn btn-secondary btn-large">🛒 I am a Buyer</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem & Solution Section -->
+    <section class="problem-solution" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Krushi Settu?</h2>
+                <p>We solve the biggest problem in agriculture: the middleman.</p>
+            </div>
+            <div class="comparison-grid">
+                <!-- The Old Way -->
+                <div class="comparison-card old-way">
+                    <div class="card-header">
+                        <h3>The Old Way 😔</h3>
+                    </div>
+                    <ul class="comparison-list">
+                        <li><span class="icon">❌</span> Middlemen take huge commissions</li>
+                        <li><span class="icon">❌</span> Farmers get low prices</li>
+                        <li><span class="icon">❌</span> Buyers pay high retail prices</li>
+                        <li><span class="icon">❌</span> Transport issues & wastage</li>
+                    </ul>
+                </div>
+                <!-- The Krushi Settu Way -->
+                <div class="comparison-card new-way">
+                    <div class="card-header">
+                        <h3>The Krushi Settu Way 🌱</h3>
+                    </div>
+                    <ul class="comparison-list">
+                        <li><span class="icon">✅</span> 0% Middleman commission</li>
+                        <li><span class="icon">✅</span> Farmers set their own fair price</li>
+                        <li><span class="icon">✅</span> Buyers get fresh, cheaper produce</li>
+                        <li><span class="icon">✅</span> Direct matching reduces cost</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Powerful Platform Features</h2>
+                <p>Everything you need to buy and sell agricultural products effortlessly.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Location-Based Matching</h3>
+                    <p>Find farmers and buyers near you to significantly reduce transportation costs and ensure
+                        freshness.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-Time Market Prices</h3>
+                    <p>Access live mandi prices directly on the app to help you decide the fairest price for your crop.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Direct Deal System</h3>
+                    <p>Chat securely between farmer and buyer. Negotiate terms directly without third-party
+                        interference.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Aadhaar Login</h3>
+                    <p>Trust is our priority. Securely verify profiles using Aadhaar to ensure a 100% genuine
+                        marketplace.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Live Order Tracking</h3>
+                    <p>Buyers can track their fresh orders in real-time, while farmers can manage dispatch status
+                        easily.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Simple Interface</h3>
+                    <p>Designed specifically for usability. Easy product uploads and a 1-click checkout experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Marketplace Sneak Peek -->
+    <section class="marketplace" id="market">
+        <div class="container">
+            <div class="section-header">
+                <h2>Live Marketplace Sneak Peek</h2>
+                <p>Browse some of the fresh produce listed directly by farmers today.</p>
+            </div>
+
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="assets/images/tomatoes_fresh_1774689686239.png" alt="Fresh Organic Tomatoes">
+                        <span class="distance-badge">📍 2.5 km away</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="farmer-info">
+                            <span class="farmer-avatar">🧑🏽‍🌾</span>
+                            <span class="farmer-name">Ramesh K. (Verified)</span>
+                        </div>
+                        <h3 class="product-title">Fresh Organic Tomatoes</h3>
+                        <div class="product-meta">
+                            <span class="qty">Available: 50 kg</span>
+                            <span class="mandi-price">Mandi: ₹25/kg</span>
+                        </div>
+                        <div class="price-row">
+                            <div class="price">₹18<span class="unit">/kg</span></div>
+                            <button class="btn btn-sm btn-primary buy-btn">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="assets/images/wheat_golden_1774689732264.png" alt="Premium Golden Wheat">
+                        <span class="distance-badge">📍 5.1 km away</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="farmer-info">
+                            <span class="farmer-avatar">👨🏻‍🌾</span>
+                            <span class="farmer-name">Surendra Singh (Verified)</span>
+                        </div>
+                        <h3 class="product-title">Premium Golden Wheat</h3>
+                        <div class="product-meta">
+                            <span class="qty">Available: 200 Quintals</span>
+                            <span class="mandi-price">Mandi: ₹2400/Qtl</span>
+                        </div>
+                        <div class="price-row">
+                            <div class="price">₹2250<span class="unit">/Qtl</span></div>
+                            <button class="btn btn-sm btn-primary buy-btn">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="assets/images/cabbage_fresh_1774689748206.png" alt="Fresh Green Cabbage">
+                        <span class="distance-badge">📍 1.2 km away</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="farmer-info">
+                            <span class="farmer-avatar">👩🏽‍🌾</span>
+                            <span class="farmer-name">Geeta Devi (Verified)</span>
+                        </div>
+                        <h3 class="product-title">Fresh Green Cabbage</h3>
+                        <div class="product-meta">
+                            <span class="qty">Available: 300 Pcs</span>
+                            <span class="mandi-price">Mandi: ₹15/Pc</span>
+                        </div>
+                        <div class="price-row">
+                            <div class="price">₹10<span class="unit">/Pc</span></div>
+                            <button class="btn btn-sm btn-primary buy-btn">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="view-all-container">
+                <button class="btn btn-outline btn-large">View All Products ➔</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <span class="icon">🌾</span> Krushi <span class="highlight">Settu</span>
+                </div>
+                <p>Empowering farmers by connecting them directly with buyers. Fair prices, better livelihoods.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">For Farmers</a></li>
+                        <li><a href="#">For Buyers</a></li>
+                        <li><a href="#">Market Prices</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Krushi Settu. All rights reserved.</p>
+                <div class="made-with">Made for Farmers ❤️</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+
+</html>

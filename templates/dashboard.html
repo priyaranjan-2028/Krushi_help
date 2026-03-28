@@ -1,0 +1,167 @@
+{% extends "farmer_portal_base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Krushi Settu{% endblock %}
+
+{% block page_content %}
+<section class="portal-hero">
+    <div class="portal-hero-copy">
+        <span><i class="fa-solid fa-leaf"></i> Smart Farmer Marketplace</span>
+        <h1>Welcome back, Farmer</h1>
+        <p>Sell smarter and grow your income with a premium agriculture workspace built for direct selling, quick order tracking, and clear market insights.</p>
+        <div class="portal-hero-actions">
+            <a class="portal-button" href="{% url 'farmer_add_crop' %}"><i class="fa-solid fa-plus"></i> Add Crop</a>
+            <a class="portal-button-outline" href="{% url 'farmer_orders' %}"><i class="fa-solid fa-box-open"></i> View Orders</a>
+            <a class="portal-button-outline" href="{{ profile_map_url }}" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i> View Map</a>
+        </div>
+    </div>
+    <div class="portal-hero-media">
+        <img src="{% static 'image/wheat_golden_1774689732264.png' %}" alt="Golden wheat field for Krushi Settu">
+    </div>
+</section>
+
+<section class="portal-grid-4">
+    <article class="portal-stat">
+        <div class="portal-stat-top"><span class="portal-stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span><span class="portal-subtle">Today</span></div>
+        <strong class="portal-stat-value">Rs. {{ earnings_today }}</strong>
+        <span class="portal-stat-label">Earnings</span>
+    </article>
+    <article class="portal-stat">
+        <div class="portal-stat-top"><span class="portal-stat-icon"><i class="fa-solid fa-cart-flatbed"></i></span><span class="portal-subtle">Open</span></div>
+        <strong class="portal-stat-value">{{ active_orders }}</strong>
+        <span class="portal-stat-label">Active Orders</span>
+    </article>
+    <article class="portal-stat">
+        <div class="portal-stat-top"><span class="portal-stat-icon"><i class="fa-solid fa-wheat-awn"></i></span><span class="portal-subtle">Listed</span></div>
+        <strong class="portal-stat-value">{{ total_products }}</strong>
+        <span class="portal-stat-label">Crops</span>
+    </article>
+    <article class="portal-stat">
+        <div class="portal-stat-top"><span class="portal-stat-icon"><i class="fa-solid fa-star"></i></span><span class="portal-subtle">Buyer Trust</span></div>
+        <strong class="portal-stat-value">{{ profile.rating }}</strong>
+        <span class="portal-stat-label">Farmer Rating</span>
+    </article>
+</section>
+
+<section class="portal-grid-main">
+    <article class="portal-panel">
+        <div class="portal-panel-head">
+            <div>
+                <span class="portal-kicker">Income trend</span>
+                <h2>Weekly earnings overview</h2>
+            </div>
+            <span class="portal-subtle">Dummy chart for hackathon demo</span>
+        </div>
+        <div class="portal-chart">
+            <svg viewBox="0 0 620 280" preserveAspectRatio="none" aria-label="Earnings chart">
+                <g class="portal-chart-grid">
+                    <line x1="0" y1="40" x2="620" y2="40"></line>
+                    <line x1="0" y1="100" x2="620" y2="100"></line>
+                    <line x1="0" y1="160" x2="620" y2="160"></line>
+                    <line x1="0" y1="220" x2="620" y2="220"></line>
+                </g>
+                <path class="portal-chart-fill" d="M20,210 C90,160 130,130 180,150 C240,175 300,80 360,95 C420,110 470,45 600,30 L600,260 L20,260 Z"></path>
+                <path class="portal-chart-line" d="M20,210 C90,160 130,130 180,150 C240,175 300,80 360,95 C420,110 470,45 600,30"></path>
+            </svg>
+        </div>
+    </article>
+
+    <aside class="portal-panel">
+        <div class="portal-panel-head">
+            <div>
+                <span class="portal-kicker">Quick actions</span>
+                <h3>Move faster today</h3>
+            </div>
+        </div>
+        <div class="portal-quick-list">
+            <div class="portal-quick-item">
+                <span class="portal-quick-icon"><i class="fa-solid fa-plus"></i></span>
+                <div>
+                    <strong>Add a fresh crop listing</strong>
+                    <p class="portal-subtle">Show new stock to nearby buyers instantly.</p>
+                </div>
+            </div>
+            <div class="portal-quick-item">
+                <span class="portal-quick-icon"><i class="fa-solid fa-box-open"></i></span>
+                <div>
+                    <strong>Review pending orders</strong>
+                    <p class="portal-subtle">Accept or reject quickly to improve buyer trust.</p>
+                </div>
+            </div>
+            <div class="portal-quick-item">
+                <span class="portal-quick-icon"><i class="fa-solid fa-chart-line"></i></span>
+                <div>
+                    <strong>Track mandi prices</strong>
+                    <p class="portal-subtle">Use trend signals before publishing your next price.</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+</section>
+
+<section class="portal-grid-main">
+    <article class="portal-panel">
+        <div class="portal-panel-head">
+            <div>
+                <span class="portal-kicker">Featured crops</span>
+                <h2>Recently updated listings</h2>
+            </div>
+            <a class="portal-button-soft" href="{% url 'farmer_crops' %}">View all crops</a>
+        </div>
+        <div class="portal-crop-grid">
+            {% for product in recent_products %}
+                <article class="portal-card portal-crop-card">
+                    <div class="portal-crop-media">
+                        {% if product.product_image %}
+                            <img src="{{ product.product_image.url }}" alt="{{ product.crop_name }}">
+                        {% else %}
+                        {% with crop=product.crop_name|lower %}
+                            {% if crop == 'rice' or crop == 'wheat' %}
+                                <img src="{% static 'image/wheat_golden_1774689732264.png' %}" alt="{{ product.crop_name }}">
+                            {% elif crop == 'tomato' or crop == 'tomatoes' or crop == 'vegetables' %}
+                                <img src="{% static 'image/tomatoes_fresh_1774689686239 - Copy.png' %}" alt="{{ product.crop_name }}">
+                            {% else %}
+                                <img src="{% static 'image/cabbage_fresh_1774689748206.png' %}" alt="{{ product.crop_name }}">
+                            {% endif %}
+                        {% endwith %}
+                        {% endif %}
+                    </div>
+                    <div class="portal-crop-body">
+                        <div class="portal-row">
+                            <h3>{{ product.crop_name }}</h3>
+                            <span class="portal-status {{ product.status }}">{{ product.get_status_display }}</span>
+                        </div>
+                        <div class="portal-crop-meta">
+                            <div><span>Price</span><strong>Rs. {{ product.price }}</strong></div>
+                            <div><span>Quantity</span><strong>{{ product.quantity_available }} {{ product.unit }}</strong></div>
+                        </div>
+                        <div class="portal-crop-actions">
+                            <a class="portal-button-outline" style="color:#1f5b3f;border-color:rgba(47,133,90,0.2);" href="{{ profile_map_url }}" target="_blank" rel="noopener">View Map</a>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </article>
+
+    <aside class="portal-panel">
+        <div class="portal-panel-head">
+            <div>
+                <span class="portal-kicker">Nearby demand</span>
+                <h3>What buyers around you want</h3>
+            </div>
+        </div>
+        <div class="portal-quick-list">
+            {% for demand in demands %}
+                <div class="portal-quick-item">
+                    <span class="portal-quick-icon"><i class="fa-solid fa-fire"></i></span>
+                    <div>
+                        <strong>{{ demand.crop_name }}</strong>
+                        <p class="portal-subtle">{{ demand.quantity_needed }} required within {{ demand.distance_km }} km.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </aside>
+</section>
+{% endblock %}

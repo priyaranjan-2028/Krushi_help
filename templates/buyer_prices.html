@@ -1,0 +1,34 @@
+{% extends "buyer_portal_base.html" %}
+{% load static %}
+{% block title %}Buyer Prices | Krushi Settu{% endblock %}
+{% block page_content %}
+<section class="portal-grid-main">
+    <article class="portal-table-card">
+        <div class="portal-panel-head">
+            <div><span class="portal-kicker">Price board</span><h2>Today's crop price trends</h2></div>
+        </div>
+        <div class="portal-table-wrap">
+            <table class="portal-table">
+                <thead><tr><th>Crop</th><th>Price</th><th>Trend</th><th>Advice</th></tr></thead>
+                <tbody>
+                    {% for item in market_prices %}
+                        <tr>
+                            <td><strong>{{ item.crop }}</strong></td>
+                            <td>Rs. {{ item.price }}</td>
+                            <td>{% if item.trend == 'up' %}<span class="portal-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> {{ item.change }}</span>{% else %}<span class="portal-trend-down"><i class="fa-solid fa-arrow-trend-down"></i> {{ item.change }}</span>{% endif %}</td>
+                            <td>{{ item.suggestion }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <aside class="portal-panel portal-illustration">
+        <img src="{% static 'image/cabbage_fresh_1774689748206.png' %}" alt="Fresh crop pricing visual">
+        <div style="padding:1.2rem;">
+            <h3 style="margin:0 0 0.45rem; font-family:'Poppins',sans-serif;">Buy with more confidence</h3>
+            <p class="portal-price-note">Compare trends before contacting farmers. When the trend drops, negotiate gently. When it rises, secure the stock earlier and open the map to judge distance.</p>
+        </div>
+    </aside>
+</section>
+{% endblock %}

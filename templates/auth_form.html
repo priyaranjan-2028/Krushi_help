@@ -1,0 +1,394 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} - Krushi Settu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% if is_register %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    {% endif %}
+</head>
+<body class="auth-page">
+    <section class="auth-layout">
+        <div class="auth-panel auth-panel-brand">
+            <div class="auth-brand-wrap">
+                <a href="{% url 'index' %}" class="auth-brand">Krushi <span>Settu</span></a>
+                <div class="auth-top-actions">
+                    <div class="language-switcher language-switcher-light">
+                        <label for="auth-language" data-i18n="lang_label">Language</label>
+                        <select id="auth-language" data-language-select>
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="or">Odia</option>
+                        </select>
+                    </div>
+                    <a href="{% url 'index' %}" class="auth-back-link" data-i18n="back_home">Back to home</a>
+                </div>
+            </div>
+
+            <div class="auth-hero-media">
+                {% if role == "Farmer" %}
+                <img src="{% static 'image/wheat_golden_1774689732264.png' %}" alt="Golden wheat field representing farmers on Krushi Settu">
+                {% else %}
+                <img src="{% static 'image/cabbage_fresh_1774689748206.png' %}" alt="Fresh farm produce available for buyers on Krushi Settu">
+                {% endif %}
+                <div class="auth-media-badge">
+                    <span>{{ role }} Portal</span>
+                    <strong>{% if is_register %}Secure registration{% else %}Fast sign in{% endif %}</strong>
+                </div>
+            </div>
+
+            <div class="auth-copy">
+                <p class="auth-kicker">{{ role }} Portal</p>
+                <h1>{{ heading }}</h1>
+                <p class="auth-description">{{ subtext }}</p>
+            </div>
+
+            <div class="auth-benefits">
+                <div class="auth-benefit-card">
+                    <h2 data-i18n="simple_flow">Simple flow</h2>
+                    <p data-i18n="simple_flow_desc">Start with basics, verify mobile, then finish the rest without leaving the page.</p>
+                </div>
+                <div class="auth-benefit-card">
+                    <h2 data-i18n="built_trust">Built for trust</h2>
+                    <p data-i18n="built_trust_desc">Verified mobile number and precise location make the marketplace safer and more reliable.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-panel auth-panel-form">
+            <div class="auth-form-scroll">
+            <div class="auth-form-card">
+                <div class="auth-form-header">
+                    <div>
+                        <h2>{{ page_title }}</h2>
+                        <p class="auth-form-text" data-i18n="form_complete_steps">Complete each step below to finish registration.</p>
+                    </div>
+                    <div class="auth-form-chip" data-i18n="{% if is_register %}new_account{% else %}account_access{% endif %}">{% if is_register %}New Account{% else %}Account Access{% endif %}</div>
+                </div>
+
+                {% if messages %}
+                <div class="auth-messages">
+                    {% for message in messages %}
+                    <div class="auth-message auth-message-{{ message.tags|default:'info' }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if is_register %}
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="auth-errors">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="register-progress">
+                        <div class="register-progress-step {% if not otp_sent %}is-active{% else %}is-done{% endif %}">1. Name & Mobile</div>
+                        <div class="register-progress-step {% if otp_sent and not otp_verified %}is-active{% elif otp_verified %}is-done{% endif %}">2. OTP Verify</div>
+                        <div class="register-progress-step {% if otp_verified %}is-active{% endif %}">3. Remaining Details</div>
+                    </div>
+
+                    <section id="register-step-1" class="register-block {% if otp_sent %}is-complete{% endif %}">
+                        <div class="section-title-row compact register-block-header">
+                            <div>
+                                <h3 data-i18n="basic_details">Basic Details</h3>
+                            </div>
+                        </div>
+
+                        <div class="auth-grid">
+                            <div class="auth-field">
+                                <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}<div class="field-error">{{ form.full_name.errors.0 }}</div>{% endif %}
+                            </div>
+
+                            <div class="auth-field">
+                                <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}<div class="field-error">{{ form.phone_number.errors.0 }}</div>{% endif %}
+                            </div>
+                        </div>
+
+                        {% if otp_sent %}
+                        <div class="register-summary-inline">
+                            <span>Name: <strong>{{ basic_data.full_name }}</strong></span>
+                            <span>Mobile: <strong>{{ basic_data.phone_number }}</strong></span>
+                        </div>
+                        {% endif %}
+
+                        {% if not otp_verified %}
+                        <div class="auth-inline-actions">
+                            <button type="submit" name="action" value="send_otp" class="btn btn-outline" data-i18n="send_otp">Send OTP</button>
+                            <span class="otp-status">OTP will be sent after mobile number validation.</span>
+                        </div>
+                        {% if otp_sent and not otp_verified %}
+                        <div class="register-next-action">
+                            <a href="#register-step-2" class="btn btn-primary" data-i18n="proceed_step_2">Proceed to Step 2</a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </section>
+
+                    <section id="register-step-2" class="register-block {% if otp_verified %}is-complete{% elif otp_sent %}is-active{% endif %}">
+                        <div class="section-title-row compact register-block-header">
+                            <div>
+                                <h3 data-i18n="mobile_verification">Mobile Verification</h3>
+                            </div>
+                        </div>
+
+                        {% if otp_sent %}
+                        <div class="auth-field">
+                            <label for="{{ form.otp.id_for_label }}">{{ form.otp.label }}</label>
+                            {{ form.otp }}
+                            {% if form.otp.errors %}<div class="field-error">{{ form.otp.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        {% if demo_otp and not otp_verified %}
+                        <div class="demo-otp-box">
+                            <span>Demo OTP</span>
+                            <strong>{{ demo_otp }}</strong>
+                        </div>
+                        {% endif %}
+
+                        {% if not otp_verified %}
+                        <button type="submit" name="action" value="verify_otp" class="btn btn-primary auth-submit" data-i18n="verify_otp">Verify OTP</button>
+                        {% else %}
+                        <div class="verify-success" data-i18n="mobile_verified">Mobile number verified successfully.</div>
+                        {% endif %}
+                        {% else %}
+                        <p class="auth-help-text">Send OTP from Step 1 to unlock this step.</p>
+                        {% endif %}
+                    </section>
+
+                    <section id="register-step-3" class="register-block {% if otp_verified %}is-active{% endif %}">
+                        <div class="section-title-row compact register-block-header">
+                            <div>
+                                <h3 data-i18n="complete_profile">Complete Profile</h3>
+                            </div>
+                        </div>
+
+                        {% if otp_verified %}
+                        <div class="auth-grid">
+                            <div class="auth-field">
+                                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                                {{ form.password }}
+                                {% if form.password.errors %}<div class="field-error">{{ form.password.errors.0 }}</div>{% endif %}
+                            </div>
+
+                            <div class="auth-field">
+                                <label for="{{ form.confirm_password.id_for_label }}">{{ form.confirm_password.label }}</label>
+                                {{ form.confirm_password }}
+                                {% if form.confirm_password.errors %}<div class="field-error">{{ form.confirm_password.errors.0 }}</div>{% endif %}
+                            </div>
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="{{ form.location_name.id_for_label }}">{{ form.location_name.label }}</label>
+                            {{ form.location_name }}
+                            {% if form.location_name.errors %}<div class="field-error">{{ form.location_name.errors.0 }}</div>{% endif %}
+                            <div id="location-suggestions" class="location-suggestions"></div>
+                            <p class="auth-help-text">Search for your location and choose the closest result.</p>
+                        </div>
+
+                        {{ form.latitude }}
+                        {{ form.longitude }}
+                        {% if form.latitude.errors %}<div class="field-error">{{ form.latitude.errors.0 }}</div>{% endif %}
+                        {% if form.longitude.errors %}<div class="field-error">{{ form.longitude.errors.0 }}</div>{% endif %}
+
+                        <div id="location-map" class="location-map"></div>
+                        <p id="map-status" class="map-status">Search or click on the map to set your location.</p>
+
+                        {% if form.farmer_type %}
+                        <div class="auth-field">
+                            <label for="{{ form.farmer_type.id_for_label }}">{{ form.farmer_type.label }}</label>
+                            {{ form.farmer_type }}
+                            {% if form.farmer_type.errors %}<div class="field-error">{{ form.farmer_type.errors.0 }}</div>{% endif %}
+                        </div>
+                        {% endif %}
+
+                        <button type="submit" name="action" value="register" class="btn btn-primary auth-submit">{{ button_text }}</button>
+                        {% else %}
+                        <p class="auth-help-text">Finish Step 2 to enable final registration.</p>
+                        {% endif %}
+                    </section>
+                </form>
+                {% else %}
+                <form method="post" class="auth-form auth-form-login">
+                    {% csrf_token %}
+
+                    {% if login_form.non_field_errors %}
+                    <div class="auth-errors">{{ login_form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="auth-field">
+                        <label for="{{ login_form.phone_number.id_for_label }}">{{ login_form.phone_number.label }}</label>
+                        {{ login_form.phone_number }}
+                        {% if login_form.phone_number.errors %}<div class="field-error">{{ login_form.phone_number.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="{{ login_form.password.id_for_label }}">{{ login_form.password.label }}</label>
+                        {{ login_form.password }}
+                        {% if login_form.password.errors %}<div class="field-error">{{ login_form.password.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary auth-submit">{{ button_text }}</button>
+                </form>
+                {% endif %}
+
+                <p class="auth-switch">
+                    {{ alternate_text }}
+                    <a href="{% url alternate_link %}">{{ alternate_label }}</a>
+                </p>
+
+                <p class="auth-home-link" data-i18n="login_help">Need help? Use your verified phone number and continue securely.</p>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    {% if is_register %}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        (function () {
+            const mapElement = document.getElementById('location-map');
+            if (!mapElement || typeof L === 'undefined') {
+                return;
+            }
+
+            const locationInput = document.getElementById('{{ form.location_name.id_for_label }}');
+            const latitudeInput = document.getElementById('{{ form.latitude.id_for_label }}');
+            const longitudeInput = document.getElementById('{{ form.longitude.id_for_label }}');
+            const statusElement = document.getElementById('map-status');
+            const suggestionsElement = document.getElementById('location-suggestions');
+            let searchTimeout = null;
+
+            const initialLat = parseFloat(latitudeInput.value || '17.3850');
+            const initialLng = parseFloat(longitudeInput.value || '78.4867');
+
+            const map = L.map('location-map').setView([initialLat, initialLng], latitudeInput.value ? 14 : 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            let marker = null;
+            if (latitudeInput.value && longitudeInput.value) {
+                marker = L.marker([initialLat, initialLng]).addTo(map);
+            }
+
+            function setMarker(lat, lng) {
+                if (!marker) {
+                    marker = L.marker([lat, lng]).addTo(map);
+                } else {
+                    marker.setLatLng([lat, lng]);
+                }
+                map.setView([lat, lng], 14);
+            }
+
+            function updateLocation(lat, lng, labelText) {
+                latitudeInput.value = lat.toFixed(6);
+                longitudeInput.value = lng.toFixed(6);
+                setMarker(lat, lng);
+
+                if (labelText) {
+                    locationInput.value = labelText;
+                    statusElement.textContent = 'Location selected successfully.';
+                    return;
+                }
+
+                statusElement.textContent = 'Fetching selected address...';
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const displayName = data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                        locationInput.value = displayName;
+                        statusElement.textContent = 'Location selected successfully.';
+                    })
+                    .catch(() => {
+                        locationInput.value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                        statusElement.textContent = 'Coordinates saved. Address lookup failed, so coordinates were used instead.';
+                    });
+            }
+
+            function renderSuggestions(items) {
+                if (!suggestionsElement) {
+                    return;
+                }
+
+                suggestionsElement.innerHTML = '';
+                if (!items.length) {
+                    suggestionsElement.style.display = 'none';
+                    return;
+                }
+
+                items.forEach((item) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'location-suggestion-item';
+                    button.textContent = item.display_name;
+                    button.addEventListener('click', function () {
+                        updateLocation(parseFloat(item.lat), parseFloat(item.lon), item.display_name);
+                        renderSuggestions([]);
+                    });
+                    suggestionsElement.appendChild(button);
+                });
+                suggestionsElement.style.display = 'block';
+            }
+
+            map.on('click', function (event) {
+                updateLocation(event.latlng.lat, event.latlng.lng, '');
+                renderSuggestions([]);
+            });
+
+            locationInput.addEventListener('input', function () {
+                const query = locationInput.value.trim();
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
+
+                if (query.length < 3) {
+                    renderSuggestions([]);
+                    return;
+                }
+
+                searchTimeout = setTimeout(function () {
+                    statusElement.textContent = 'Searching locations...';
+                    fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=in&q=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            renderSuggestions(data);
+                            statusElement.textContent = data.length ? 'Choose the best match from search results.' : 'No matching locations found.';
+                        })
+                        .catch(() => {
+                            renderSuggestions([]);
+                            statusElement.textContent = 'Search is unavailable right now. You can still click on the map.';
+                        });
+                }, 300);
+            });
+
+            if (!latitudeInput.value && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    map.setView([position.coords.latitude, position.coords.longitude], 12);
+                });
+            }
+        })();
+    </script>
+    {% endif %}
+    <script src="{% static 'js/language.js' %}"></script>
+</body>
+</html>

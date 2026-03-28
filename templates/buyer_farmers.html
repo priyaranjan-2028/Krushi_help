@@ -1,0 +1,38 @@
+{% extends "buyer_portal_base.html" %}
+{% load static %}
+{% block title %}Farmer Profiles | Krushi Settu{% endblock %}
+{% block page_content %}
+<section class="portal-panel">
+    <div class="portal-panel-head">
+        <div><span class="portal-kicker">Farmer directory</span><h2>Verified farmer profiles</h2></div>
+    </div>
+    <div class="portal-crop-grid">
+        {% for farmer in farmer_profiles %}
+            <article class="portal-card portal-crop-card">
+                <div class="portal-crop-media">
+                    {% if farmer.profile_image %}
+                        <img src="{{ farmer.profile_image.url }}" alt="{{ farmer.full_name }}">
+                    {% else %}
+                        <img src="{% static 'image/hero_farmer_app_1774689616135 - Copy.png' %}" alt="{{ farmer.full_name }}">
+                    {% endif %}
+                </div>
+                <div class="portal-crop-body">
+                    <div class="portal-row">
+                        <h3>{{ farmer.full_name }}</h3>
+                        <span class="portal-status available">Verified</span>
+                    </div>
+                    <p class="portal-subtle">{{ farmer.location_name }}</p>
+                    <div class="portal-crop-meta">
+                        <div><span>Farmer Type</span><strong>{{ farmer.get_farmer_type_display|default:'General Farmer' }}</strong></div>
+                        <div><span>Products</span><strong>{{ farmer.products.count }}</strong></div>
+                    </div>
+                    <div class="portal-crop-actions">
+                        <a class="portal-button-soft" href="{% url 'buyer_messages' %}?farmer={{ farmer.id }}">Message</a>
+                        <a class="portal-button-outline" style="color:#1f5b3f;border-color:rgba(47,133,90,0.2);" href="https://www.google.com/maps?q={{ farmer.latitude }},{{ farmer.longitude }}" target="_blank" rel="noopener">View Map</a>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

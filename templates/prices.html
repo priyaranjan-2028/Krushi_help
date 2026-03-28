@@ -1,0 +1,54 @@
+{% extends "farmer_portal_base.html" %}
+{% load static %}
+
+{% block title %}Market Prices | Krushi Settu{% endblock %}
+
+{% block page_content %}
+<section class="portal-grid-main">
+    <article class="portal-table-card">
+        <div class="portal-panel-head">
+            <div>
+                <span class="portal-kicker">Market prices</span>
+                <h2>Today's mandi snapshot</h2>
+            </div>
+            <span class="portal-subtle">Live-style premium pricing view</span>
+        </div>
+        <div class="portal-table-wrap">
+            <table class="portal-table">
+                <thead>
+                    <tr>
+                        <th>Crop</th>
+                        <th>Price</th>
+                        <th>Trend</th>
+                        <th>Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in market_prices %}
+                        <tr>
+                            <td><strong>{{ item.crop }}</strong></td>
+                            <td>?{{ item.price }}</td>
+                            <td>
+                                {% if item.trend == 'up' %}
+                                    <span class="portal-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> {{ item.change }}</span>
+                                {% else %}
+                                    <span class="portal-trend-down"><i class="fa-solid fa-arrow-trend-down"></i> {{ item.change }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.suggestion }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <aside class="portal-panel portal-illustration">
+        <img src="{% static 'image/wheat_golden_1774689732264.png' %}" alt="Agriculture market visual">
+        <div style="padding:1.2rem;">
+            <h3 style="margin:0 0 0.45rem; font-family:'Poppins',sans-serif;">Smart selling suggestion</h3>
+            <p class="portal-price-note">Tomato and vegetable prices are moving more aggressively. If the trend is down, wait before selling. If it is up, publish quickly and reach nearby buyers first.</p>
+        </div>
+    </aside>
+</section>
+{% endblock %}

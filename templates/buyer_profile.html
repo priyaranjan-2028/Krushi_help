@@ -1,0 +1,33 @@
+{% extends "buyer_portal_base.html" %}
+{% load static %}
+{% block title %}Buyer Profile | Krushi Settu{% endblock %}
+{% block page_content %}
+<section class="portal-profile-grid">
+    <article class="portal-card portal-profile-card">
+        {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}">
+        {% else %}
+            <img src="{% static 'image/tomatoes_fresh_1774689686239 - Copy.png' %}" alt="Buyer profile banner">
+        {% endif %}
+        <h2 style="margin:0; font-family:'Poppins',sans-serif;">{{ profile.full_name }}</h2>
+        <p class="portal-subtle">Buyer from {{ profile.location_name }}</p>
+        <div class="portal-badges" style="justify-content:center; margin-top:1rem;">
+            <span class="portal-badge" style="color:#1f5b3f; background:#e7f5ec;"><i class="fa-solid fa-location-dot"></i> {{ profile.location_name }}</span>
+            <a class="portal-badge" style="color:#1f5b3f; background:#e7f5ec;" href="{{ profile_map_url }}" target="_blank" rel="noopener"><i class="fa-solid fa-map"></i> View Map</a>
+        </div>
+    </article>
+    <article class="portal-panel">
+        <div class="portal-panel-head"><div><span class="portal-kicker">Profile settings</span><h2>Edit your buyer account</h2></div></div>
+        <form method="post" enctype="multipart/form-data" class="portal-form-grid">
+            {% csrf_token %}
+            <div class="portal-form-field"><label for="{{ profile_form.full_name.id_for_label }}">Name</label>{{ profile_form.full_name }}</div>
+            <div class="portal-form-field"><label for="{{ profile_form.phone_number.id_for_label }}">Phone</label>{{ profile_form.phone_number }}</div>
+            <div class="portal-form-field"><label for="{{ profile_form.location_name.id_for_label }}">Location</label>{{ profile_form.location_name }}</div>
+            <div class="portal-form-field"><label for="{{ profile_form.bank_upi_details.id_for_label }}">UPI</label>{{ profile_form.bank_upi_details }}</div>
+            <div class="portal-form-field"><label for="{{ profile_form.preferred_language.id_for_label }}">Language</label>{{ profile_form.preferred_language }}</div>
+            <div class="portal-form-field"><label for="{{ profile_form.profile_image.id_for_label }}">Profile Image</label>{{ profile_form.profile_image }}</div>
+            <div class="portal-form-field full"><button class="portal-button-soft" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button></div>
+        </form>
+    </article>
+</section>
+{% endblock %}

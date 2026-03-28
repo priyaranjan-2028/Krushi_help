@@ -1,0 +1,95 @@
+{% extends "farmer_portal_base.html" %}
+
+{% block title %}Orders | Krushi Settu{% endblock %}
+
+{% block page_content %}
+<section class="portal-panel" data-tab-group>
+    <div class="portal-panel-head">
+        <div>
+            <span class="portal-kicker">Orders management</span>
+            <h2>Track every buyer order</h2>
+        </div>
+    </div>
+
+    <div class="portal-tabs">
+        <button type="button" class="portal-tab is-active" data-tab-target="new">New</button>
+        <button type="button" class="portal-tab" data-tab-target="processing">Processing</button>
+        <button type="button" class="portal-tab" data-tab-target="completed">Completed</button>
+    </div>
+
+    <div class="portal-tab-pane is-active" data-tab-pane="new">
+        <div class="portal-order-grid">
+            {% for order in new_orders %}
+                <article class="portal-order-card">
+                    <div class="portal-row">
+                        <div>
+                            <h4>{{ order.buyer_name }}</h4>
+                            <p class="portal-order-meta">{{ order.product.crop_name|default:"Product unavailable" }} | {{ order.quantity }} qty</p>
+                        </div>
+                        <span class="portal-status pending">{{ order.get_status_display }}</span>
+                    </div>
+                    <div class="portal-order-actions" style="margin-top:1rem;">
+                        <form method="post" action="{% url 'update_order_status' order.id 'accepted' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'farmer_orders' %}">
+                            <button class="portal-button-soft" type="submit">Accept</button>
+                        </form>
+                        <form method="post" action="{% url 'update_order_status' order.id 'rejected' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'farmer_orders' %}">
+                            <button class="portal-button-danger" type="submit">Reject</button>
+                        </form>
+                    </div>
+                </article>
+            {% empty %}
+                <article class="portal-order-card"><p class="portal-order-meta">No new orders right now.</p></article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="portal-tab-pane" data-tab-pane="processing">
+        <div class="portal-order-grid">
+            {% for order in ongoing_orders %}
+                <article class="portal-order-card">
+                    <div class="portal-row">
+                        <div>
+                            <h4>{{ order.buyer_name }}</h4>
+                            <p class="portal-order-meta">{{ order.product.crop_name|default:"Product unavailable" }} | {{ order.quantity }} qty</p>
+                        </div>
+                        <span class="portal-status accepted">{{ order.get_status_display }}</span>
+                    </div>
+                    <p class="portal-order-meta">Delivery mode: {{ order.delivery_mode }}</p>
+                    <div class="portal-order-actions" style="margin-top:1rem;">
+                        <form method="post" action="{% url 'update_order_status' order.id 'delivered' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'farmer_orders' %}">
+                            <button class="portal-button-soft" type="submit">Mark Delivered</button>
+                        </form>
+                    </div>
+                </article>
+            {% empty %}
+                <article class="portal-order-card"><p class="portal-order-meta">No processing orders yet.</p></article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="portal-tab-pane" data-tab-pane="completed">
+        <div class="portal-order-grid">
+            {% for order in completed_orders %}
+                <article class="portal-order-card">
+                    <div class="portal-row">
+                        <div>
+                            <h4>{{ order.buyer_name }}</h4>
+                            <p class="portal-order-meta">{{ order.product.crop_name|default:"Product unavailable" }} | {{ order.quantity }} qty</p>
+                        </div>
+                        <span class="portal-status delivered">{{ order.get_status_display }}</span>
+                    </div>
+                    <p class="portal-order-meta">Total earned: ?{{ order.total_amount }}</p>
+                </article>
+            {% empty %}
+                <article class="portal-order-card"><p class="portal-order-meta">No completed orders yet.</p></article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

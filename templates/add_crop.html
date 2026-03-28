@@ -1,0 +1,54 @@
+{% extends "farmer_portal_base.html" %}
+
+{% block title %}Sell Product | Krushi Settu{% endblock %}
+
+{% block page_content %}
+<section class="portal-form-wrap">
+    <article class="portal-panel portal-form-card">
+        <div class="portal-panel-head">
+            <div>
+                <span class="portal-kicker">Sell product</span>
+                <h2>{% if edit_product %}Update crop listing{% else %}Add a new crop{% endif %}</h2>
+            </div>
+            <span class="portal-subtle">Premium farmer listing form</span>
+        </div>
+
+        <form method="post" action="{% url 'save_product' %}" enctype="multipart/form-data" class="portal-form-grid">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'farmer_crops' %}">
+            {% if edit_product %}
+                <input type="hidden" name="product_id" value="{{ edit_product.id }}">
+            {% endif %}
+
+            <div class="portal-form-field">
+                <label for="{{ product_form.crop_name.id_for_label }}">Crop Name</label>
+                {{ product_form.crop_name }}
+            </div>
+            <div class="portal-form-field">
+                <label for="{{ product_form.price.id_for_label }}">Price</label>
+                {{ product_form.price }}
+            </div>
+            <div class="portal-form-field">
+                <label for="{{ product_form.quantity_available.id_for_label }}">Quantity</label>
+                {{ product_form.quantity_available }}
+            </div>
+            <div class="portal-form-field">
+                <label for="{{ product_form.unit.id_for_label }}">Unit</label>
+                {{ product_form.unit }}
+            </div>
+            <div class="portal-form-field">
+                <label for="{{ product_form.product_image.id_for_label }}">Upload Image</label>
+                {{ product_form.product_image }}
+            </div>
+            <div class="portal-form-field">
+                <label for="{{ product_form.status.id_for_label }}">Status</label>
+                {{ product_form.status }}
+            </div>
+
+            <div class="portal-form-field full">
+                <button class="portal-button-soft" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> {% if edit_product %}Update Crop{% else %}Publish Crop{% endif %}</button>
+            </div>
+        </form>
+    </article>
+</section>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions - Krushi Settu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="terms-page" data-index-url="{% url 'index' %}">
+    <section class="terms-page-shell">
+        <div class="terms-page-card">
+            <div class="terms-page-header">
+                <a href="{% url 'index' %}" class="auth-brand">Krushi <span>Settu</span></a>
+                <div class="auth-form-chip">Terms Required</div>
+            </div>
+            <div class="section-header terms-page-title">
+                <h2>Terms and Conditions</h2>
+                <p>Please read and accept these terms before entering the Krushi Settu platform.</p>
+            </div>
+            <div class="terms-card">
+                <div class="terms-item">
+                    <h3>1. Honest Listings</h3>
+                    <p>Farmers and buyers must provide accurate product, pricing, quantity, and identity details at all times.</p>
+                </div>
+                <div class="terms-item">
+                    <h3>2. Fair Platform Use</h3>
+                    <p>Users must not misuse the platform for spam, fraud, fake orders, or misleading market information.</p>
+                </div>
+                <div class="terms-item">
+                    <h3>3. Verification and Safety</h3>
+                    <p>Krushi Settu may request profile verification and may restrict access if suspicious activity is detected.</p>
+                </div>
+                <div class="terms-item">
+                    <h3>4. Payments and Delivery</h3>
+                    <p>Users are responsible for confirming price, delivery, and payment terms before completing a transaction.</p>
+                </div>
+                <div class="terms-item">
+                    <h3>5. Acceptance</h3>
+                    <p>By clicking accept, you agree to follow these terms and use the platform responsibly.</p>
+                </div>
+            </div>
+            <div class="terms-page-actions">
+                <button type="button" class="btn btn-outline btn-large" id="close-terms-page-btn">Close</button>
+                <button type="button" class="btn btn-primary btn-large" id="accept-terms-page-btn">I Accept and Continue</button>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

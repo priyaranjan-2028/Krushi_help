@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Krushi Settu Farmer Portal{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/farmer_portal.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="portal-page">
+    <div class="portal-mobile-overlay" data-portal-overlay></div>
+    <div class="portal-app">
+        <aside class="portal-sidebar" data-portal-sidebar>
+            <div class="portal-sidebar-inner">
+                <div class="portal-brand">
+                    <div class="portal-brand-mark"><i class="fa-solid fa-seedling"></i></div>
+                    <div class="portal-brand-copy">
+                        <strong>Krushi Settu</strong>
+                        <span data-i18n="farmer_sidebar_brand">Smart Farmer Marketplace</span>
+                    </div>
+                </div>
+
+                <div class="portal-farmer-card">
+                    {% if profile.profile_image %}
+                        <img class="portal-avatar-image" src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}">
+                    {% else %}
+                        <div class="portal-avatar">{{ profile.full_name|slice:":1"|upper }}</div>
+                    {% endif %}
+                    <h3>{{ profile.full_name }}</h3>
+                    <p>{{ profile.phone_number }}</p>
+                    <div class="portal-badges">
+                        <span class="portal-badge"><i class="fa-solid fa-user-tag"></i> {{ profile.get_role_display }}</span>
+                        <span class="portal-badge"><i class="fa-solid fa-tractor"></i> {{ profile.get_farmer_type_display|default:"Farmer" }}</span>
+                        <span class="portal-badge"><i class="fa-solid fa-circle-check"></i> {{ profile.get_verification_status_display }}</span>
+                    </div>
+                </div>
+
+                <nav class="portal-menu">
+                    <a href="{% url 'farmer_dashboard' %}" class="{% if active_page == 'dashboard' %}is-active{% endif %}"><i class="fa-solid fa-chart-pie"></i><span data-i18n="menu_dashboard">Dashboard</span></a>
+                    <a href="{% url 'farmer_crops' %}" class="{% if active_page == 'crops' %}is-active{% endif %}"><i class="fa-solid fa-wheat-awn"></i><span data-i18n="menu_crops">My Crops</span></a>
+                    <a href="{% url 'farmer_add_crop' %}" class="{% if active_page == 'sell' %}is-active{% endif %}"><i class="fa-solid fa-plus"></i><span data-i18n="menu_sell">Sell Product</span></a>
+                    <a href="{% url 'farmer_orders' %}" class="{% if active_page == 'orders' %}is-active{% endif %}"><i class="fa-solid fa-box-open"></i><span data-i18n="menu_orders">Orders</span></a>
+                    <a href="{% url 'farmer_messages' %}" class="{% if active_page == 'messages' %}is-active{% endif %}"><i class="fa-solid fa-comments"></i><span data-i18n="menu_messages">Messages</span></a>
+                    <a href="{% url 'farmer_prices' %}" class="{% if active_page == 'prices' %}is-active{% endif %}"><i class="fa-solid fa-chart-line"></i><span data-i18n="menu_prices">Market Prices</span></a>
+                    <a href="{% url 'farmer_profile' %}" class="{% if active_page == 'profile' %}is-active{% endif %}"><i class="fa-solid fa-user"></i><span data-i18n="menu_profile">Profile</span></a>
+                    <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="menu_logout">Logout</span></a>
+                </nav>
+
+                <div class="portal-sidebar-footer">
+                    <span>Bank / UPI</span>
+                    <strong>{{ profile.bank_upi_details|default:"Add UPI details" }}</strong>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <header class="portal-topbar">
+                <div class="portal-topbar-left">
+                    <button class="portal-menu-toggle" type="button" data-portal-toggle>
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="portal-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search crops, buyers, prices, or orders" data-i18n-placeholder="search_farmer_placeholder">
+                    </div>
+                    <div class="language-switcher language-switcher-portal">
+                        <label for="farmer-language" data-i18n="lang_label">Language</label>
+                        <select id="farmer-language" data-language-select>
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="or">Odia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="portal-topbar-right">
+                    <div class="portal-subtle">
+                        <strong>Hello, {{ profile.full_name|default:"Farmer" }}</strong><br>
+                        <span>{{ profile.location_name }}</span>
+                    </div>
+                    <button class="portal-icon-btn" type="button" aria-label="Notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="count">{{ notifications_count }}</span>
+                    </button>
+                    <a class="portal-avatar-btn" href="{% url 'farmer_profile' %}" aria-label="Profile avatar">
+                        {% if profile.profile_image %}
+                            <img class="portal-avatar-btn-image" src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}">
+                        {% else %}
+                            {{ profile.full_name|slice:":1"|upper }}
+                        {% endif %}
+                    </a>
+                </div>
+            </header>
+
+            {% if messages %}
+                <div class="portal-content">
+                    <section class="portal-panel">
+                        {% for message in messages %}
+                            <div class="portal-subtle" style="padding:0.8rem 1rem;border-radius:16px;background:#f7fbf8;border:1px solid rgba(47,133,90,0.08);margin-bottom:0.5rem;">{{ message }}</div>
+                        {% endfor %}
+                    </section>
+                </div>
+            {% endif %}
+
+            <div class="portal-content">
+                {% block page_content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <a class="portal-button-soft portal-floating" href="{% url 'farmer_add_crop' %}"><i class="fa-solid fa-plus"></i> <span data-i18n="sell_crop_float">Sell Crop</span></a>
+    <script src="{% static 'js/language.js' %}"></script>
+    <script src="{% static 'js/farmer_portal.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

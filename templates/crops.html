@@ -1,0 +1,62 @@
+{% extends "farmer_portal_base.html" %}
+{% load static %}
+
+{% block title %}My Crops | Krushi Settu{% endblock %}
+
+{% block page_content %}
+<section class="portal-panel">
+    <div class="portal-panel-head">
+        <div>
+            <span class="portal-kicker">Crop inventory</span>
+            <h2>My Crops</h2>
+        </div>
+        <a class="portal-button-soft" href="{% url 'farmer_add_crop' %}"><i class="fa-solid fa-plus"></i> Add Crop</a>
+    </div>
+
+    <div class="portal-crop-grid">
+        {% for product in products %}
+            <article class="portal-card portal-crop-card">
+                <div class="portal-crop-media">
+                    {% if product.product_image %}
+                        <img src="{{ product.product_image.url }}" alt="{{ product.crop_name }}">
+                    {% else %}
+                    {% with crop=product.crop_name|lower %}
+                        {% if crop == 'rice' or crop == 'wheat' %}
+                            <img src="{% static 'image/wheat_golden_1774689732264.png' %}" alt="{{ product.crop_name }}">
+                        {% elif crop == 'tomato' or crop == 'tomatoes' or crop == 'vegetables' %}
+                            <img src="{% static 'image/tomatoes_fresh_1774689686239 - Copy.png' %}" alt="{{ product.crop_name }}">
+                        {% else %}
+                            <img src="{% static 'image/cabbage_fresh_1774689748206.png' %}" alt="{{ product.crop_name }}">
+                        {% endif %}
+                    {% endwith %}
+                    {% endif %}
+                </div>
+                <div class="portal-crop-body">
+                    <div class="portal-row">
+                        <h3>{{ product.crop_name }}</h3>
+                        <span class="portal-status {{ product.status }}">{{ product.get_status_display }}</span>
+                    </div>
+                    <div class="portal-crop-meta">
+                        <div><span>Price</span><strong>Rs. {{ product.price }}</strong></div>
+                        <div><span>Quantity</span><strong>{{ product.quantity_available }} {{ product.unit }}</strong></div>
+                    </div>
+                    <div class="portal-crop-actions">
+                        <a class="portal-button-soft" href="{% url 'farmer_add_crop' %}?edit={{ product.id }}"><i class="fa-solid fa-pen"></i> Edit</a>
+                        <a class="portal-button-outline" style="color:#1f5b3f;border-color:rgba(47,133,90,0.2);" href="{{ profile_map_url }}" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i> Map</a>
+                        <form method="post" action="{% url 'delete_product' product.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'farmer_crops' %}">
+                            <button class="portal-button-danger" type="submit"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <article class="portal-panel">
+                <h3>No crops listed yet</h3>
+                <p class="portal-subtle">Start by adding your first crop for buyers to discover.</p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

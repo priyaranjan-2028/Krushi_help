@@ -1,0 +1,70 @@
+{% extends "farmer_portal_base.html" %}
+
+{% block title %}Messages | Krushi Settu{% endblock %}
+
+{% block page_content %}
+<section class="portal-panel">
+    <div class="portal-panel-head">
+        <div>
+            <span class="portal-kicker">Messages</span>
+            <h2>Farmer conversations</h2>
+        </div>
+        <span class="portal-subtle">WhatsApp-style layout for hackathon demo</span>
+    </div>
+
+    <div class="portal-chat-layout">
+        <div class="portal-contact-list">
+            {% for chat in chats %}
+                <article class="portal-contact-card {% if selected_chat and selected_chat.buyer_name == chat.buyer_name %}is-active{% elif not selected_chat and forloop.first %}is-active{% endif %}" data-chat-contact data-chat-name="{{ chat.buyer_name }}" data-chat-status="Buyer asking about quality and delivery" data-chat-message="{{ chat.message }}">
+                    <div class="portal-row">
+                        <div>
+                            <h4>{{ chat.buyer_name }}</h4>
+                            <p>{{ chat.message|truncatechars:45 }}</p>
+                        </div>
+                        {% if chat.is_unread %}
+                            <span class="portal-unread-dot"></span>
+                        {% endif %}
+                    </div>
+                </article>
+            {% empty %}
+                <article class="portal-contact-card is-active" data-chat-contact data-chat-name="No buyers yet" data-chat-status="Conversation open" data-chat-message="Messages from buyers will appear here.">
+                    <h4>No conversations yet</h4>
+                    <p>Buyer discussions will show here.</p>
+                </article>
+            {% endfor %}
+        </div>
+
+        <div class="portal-chat-window">
+            <div class="portal-chat-head">
+                <div>
+                    <strong data-chat-active-name>{% if selected_chat %}{{ selected_chat.buyer_name }}{% else %}Buyer conversation{% endif %}</strong><br>
+                    <span class="portal-subtle" data-chat-active-status>Buyer asking about quality and delivery</span>
+                </div>
+                <span class="portal-status pending">{{ unread_count }} unread</span>
+            </div>
+
+            <div class="portal-chat-thread">
+                <div class="portal-chat-bubble">
+                    <p data-chat-active-message>{% if selected_chat %}{{ selected_chat.message }}{% else %}Messages from interested buyers will appear here.{% endif %}</p>
+                    <small>9:10 AM</small>
+                </div>
+                <div class="portal-chat-bubble outgoing">
+                    <p>Yes, the stock is fresh and ready. We can discuss quantity and delivery timing.</p>
+                    <small>9:12 AM</small>
+                </div>
+                <div class="portal-chat-bubble">
+                    <p>Please share your best price and when the crop can be dispatched.</p>
+                    <small>9:14 AM</small>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'send_chat_message' %}" class="portal-chat-input">
+                {% csrf_token %}
+                {{ chat_form.buyer_name }}
+                {{ chat_form.message }}
+                <button class="portal-button-soft" type="submit"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

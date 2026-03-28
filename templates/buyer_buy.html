@@ -1,0 +1,64 @@
+{% extends "buyer_portal_base.html" %}
+{% load static %}
+{% block title %}Buy Crops | Krushi Settu{% endblock %}
+{% block page_content %}
+<section class="portal-panel">
+    <div class="portal-panel-head">
+        <div>
+            <span class="portal-kicker">Buy crops</span>
+            <h2>Choose crops and connect with farmers</h2>
+        </div>
+        <a class="portal-button-soft" href="{% url 'buyer_farmers' %}"><i class="fa-solid fa-users"></i> View Farmers</a>
+    </div>
+
+    <div class="portal-crop-grid">
+        {% for product in featured_products %}
+            <article class="portal-card portal-crop-card">
+                <div class="portal-crop-media">
+                    {% if product.product_image %}
+                        <img src="{{ product.product_image.url }}" alt="{{ product.crop_name }}">
+                    {% elif product.crop_name|lower == 'rice' or product.crop_name|lower == 'wheat' %}
+                        <img src="{% static 'image/wheat_golden_1774689732264.png' %}" alt="{{ product.crop_name }}">
+                    {% elif product.crop_name|lower == 'tomato' or product.crop_name|lower == 'tomatoes' or product.crop_name|lower == 'vegetables' %}
+                        <img src="{% static 'image/tomatoes_fresh_1774689686239 - Copy.png' %}" alt="{{ product.crop_name }}">
+                    {% else %}
+                        <img src="{% static 'image/cabbage_fresh_1774689748206.png' %}" alt="{{ product.crop_name }}">
+                    {% endif %}
+                </div>
+                <div class="portal-crop-body">
+                    <div class="portal-row">
+                        <h3>{{ product.crop_name }}</h3>
+                        <span class="portal-status {{ product.status }}">{{ product.get_status_display }}</span>
+                    </div>
+                    <div class="portal-row" style="margin-top:0.75rem; align-items:flex-start;">
+                        <div style="display:flex; gap:0.75rem; align-items:center;">
+                            {% if product.farmer.profile_image %}
+                                <img class="portal-mini-avatar" src="{{ product.farmer.profile_image.url }}" alt="{{ product.farmer.full_name }}">
+                            {% else %}
+                                <span class="portal-quick-icon"><i class="fa-solid fa-user"></i></span>
+                            {% endif %}
+                            <div>
+                                <strong>{{ product.farmer.full_name }}</strong>
+                                <p class="portal-subtle">{{ product.farmer.location_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portal-crop-meta">
+                        <div><span>Price</span><strong>Rs. {{ product.price }}</strong></div>
+                        <div><span>Quantity</span><strong>{{ product.quantity_available }} {{ product.unit }}</strong></div>
+                    </div>
+                    <div class="portal-crop-actions">
+                        <a class="portal-button-soft" href="{% url 'buyer_messages' %}?farmer={{ product.farmer.id }}"><i class="fa-solid fa-bag-shopping"></i> Buy Now</a>
+                        <a class="portal-button-outline" style="color:#1f5b3f;border-color:rgba(47,133,90,0.2);" href="https://www.google.com/maps?q={{ product.farmer.latitude }},{{ product.farmer.longitude }}" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i> View Map</a>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <article class="portal-panel">
+                <h3>No crops available right now</h3>
+                <p class="portal-subtle">Farmer listings will appear here once products are published.</p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
